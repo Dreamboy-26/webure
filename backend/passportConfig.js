@@ -38,7 +38,13 @@ exports.initializingPassport = (passport) => {
 }
 
 exports.isAuthenticated = async (req, res, next) => {
-  if (req.user) {
+  if (req.cookies) {
+    const token = req.cookies.jwtoken
+    // const verifyToken = jwt.verify(token, 'SECRET')
+    // var userId = verifyToken._id
+    // const rootUser = await User.findOne({ _id: userId })
+   
+
     return next()
   } else {
     res.send('error')
@@ -46,16 +52,15 @@ exports.isAuthenticated = async (req, res, next) => {
 
   // const token = req.cookies.jwtoken
   // const verifyToken = jwt.verify(token, 'SECRET')
-  // const rootUser = await User.findOne({ _id: verifyToken._id })
+  // var userId = verifyToken._id
+  // const rootUser = await User.findOne({ _id: userId })
 
-  // if (!rootUser) {
-  //   res.send('User Not Found')
+  // if (rootUser) {
+  //   req.token = token
+  //   req.rootUser = rootUser
+  //   req.userId = rootUser._id
+  //   return next()
+  // } else {
+  //   console.log('error')
   // }
-
-  // req.token = token
-  // req.rootUser = rootUser
-  // req.userId = rootUser._id
-  // next()
-
-  // res.redirect("/login")
 }

@@ -6,9 +6,9 @@ const passport = require('passport')
 const { initializingPassport, isAuthenticated } = require('./passportConfig.js')
 const jwt = require('jsonwebtoken')
 initializingPassport(passport)
-routes.get('/', (req, res) => {
-  res.send('Hi from routes')
-})
+// routes.get('/', (req, res) => {
+//   res.send('Hi from routes')
+// })
 
 routes.post('/signup', async (req, res) => {
   const user = await User.findOne({ username: req.body.username })
@@ -25,26 +25,39 @@ routes.post(
   '/login',
   passport.authenticate('local', { failureMessage: 'something is wrong' }),
   (req, res) => {
-    const token = jwt.sign({ _id: this._id }, 'SECRET')
-
-    res.cookie('jwtoken', token, {
-      expires: new Date(Date.now() + 2589200000),
-      httpOnly: true,
-    })
+    if (req.user) {
+      let token = jwt.sign({ _id: req.user._id }, 'SECRET')
+      res.cookie('jwtoken', token, {
+        expires: new Date(Date.now() + 2589200000),
+        httpOnly: true,
+      })
+    }
 
     res.send(req.user)
   },
 )
 
-routes.get('/dashboard/:id', async (req, res) => {
+routes.get('/dashboard/:id', isAuthenticated, async (req, res) => {
   const id = req.params.id
   const regUser = await User.findById(id)
   res.send(regUser)
+  // if (!req.rootUser) {
+  //   res.redirect('/login')
+  // }
+  // console.log(regUser)
 })
 
-routes.get('logout', (req, res) => {
-  req.logout()
-  res.redirect('/login')
+routes.get('/logout', (req, res) => {
+ 
+  if (req.cookies) {
+    res
+    .clearCookie('jwtoken')
+    .status(200)
+    .send({
+        message: 'You have logged out'
+    })
+} 
+  
 })
 
 module.exports = routes

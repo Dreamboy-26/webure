@@ -1,19 +1,29 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import {  useNavigate, useParams } from "react-router-dom";
 import "../styles/dashboard.css"
 
 const Dashboard = () => {
   const {id} = useParams();
   const [user, setUser] = useState([]);
-
+const navigate=useNavigate()
   const getUser = async () => {
     await axios.get(`http://localhost:5000/dashboard/${id}`).then((res) => {
       setUser(res.data);
     });
   };
 
-  console.log(id);
+const handlLogout=async()=>{
+  await axios.get(`http://localhost:5000/logout`).then((res) => {
+   if(res.status==200)
+   {
+    alert("loggedout")
+    navigate("/login")
+   }
+  });
+}
+
+  // console.log(user)
   useEffect(() => {
     getUser();
   },[]);
@@ -28,7 +38,9 @@ const Dashboard = () => {
    <h3>Password:{user.password}</h3>
    </div>
    </div>
-        
+        <div>
+          <button onClick={handlLogout}>Logout</button>
+        </div>
    </>
      
        
