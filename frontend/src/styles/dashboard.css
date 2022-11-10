@@ -1,0 +1,12 @@
+.dashDiv{
+    box-shadow: rgba(173, 32, 32, 0.56) 0px 22px 70px 4px;
+    width: 400px;
+    margin: auto;
+    margin-top: 100px;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.userImage{
+    align-items: center;
+}

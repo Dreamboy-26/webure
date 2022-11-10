@@ -4,7 +4,8 @@ const app = express()
 const routes = require('./routes.js')
 const passport=require("passport")
 const expressSession=require("express-session")
-
+const cors=require("cors")
+app.use(cors())
 app.use(expressSession({secret:"secret",resave:false, saveUninitializes:false}))
 app.use(express.json())
 app.use(passport.initialize())
@@ -22,6 +23,10 @@ mongoose
 app.get('/', routes)
 app.post('/signup', routes)
 app.post('/login', routes)
+app.get('/dashboard/:id', routes)
+app.get('/logout', routes)
+
+
 
 
 

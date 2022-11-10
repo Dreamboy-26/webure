@@ -1,7 +1,7 @@
 const passport = require('passport')
 const User = require('./userSchema.js')
-const LocalStrategy = require('passport-local')
-const jwt=require("jsonwebtoken")
+const LocalStrategy = require('passport-local').Strategy
+const jwt = require('jsonwebtoken')
 exports.initializingPassport = (passport) => {
   passport.use(
     new LocalStrategy(async (username, password, done) => {
@@ -16,15 +16,6 @@ exports.initializingPassport = (passport) => {
           return done(null, false)
         }
 
-
-//json web token
-
-const token=jwt.sign({_id:this._id},"SECRET")
-console.log(token)
-
-
-
-
         return done(null, user)
       } catch (error) {
         return done(error, false)
@@ -32,7 +23,7 @@ console.log(token)
     }),
   )
 
-  passport.serializeUser(async (user, done) => {
+  passport.serializeUser((user, done) => {
     done(null, user.id)
   })
 
@@ -46,13 +37,25 @@ console.log(token)
   })
 }
 
+exports.isAuthenticated = async (req, res, next) => {
+  if (req.user) {
+    return next()
+  } else {
+    res.send('error')
+  }
 
+  // const token = req.cookies.jwtoken
+  // const verifyToken = jwt.verify(token, 'SECRET')
+  // const rootUser = await User.findOne({ _id: verifyToken._id })
 
-exports.isAuthenticated=(req,res,next)=>{
-    if(req.user)
-    {
-        return next()
-    }
+  // if (!rootUser) {
+  //   res.send('User Not Found')
+  // }
 
-    res.redirect("/login")
+  // req.token = token
+  // req.rootUser = rootUser
+  // req.userId = rootUser._id
+  // next()
+
+  // res.redirect("/login")
 }

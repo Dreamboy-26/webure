@@ -1,31 +1,38 @@
-import React from 'react'
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import "../styles/dashboard.css"
 
 const Dashboard = () => {
+  const {id} = useParams();
+  const [user, setUser] = useState([]);
+
+  const getUser = async () => {
+    await axios.get(`http://localhost:5000/dashboard/${id}`).then((res) => {
+      setUser(res.data);
+    });
+  };
+
+  console.log(id);
+  useEffect(() => {
+    getUser();
+  },[]);
+
   return (
-    <table>
-        <thead>
-            <tr>
-                <td>Image</td>
-                <td>First Name</td>
-                <td>Last Name</td>
-                <td>Email</td>
-                <td>Password</td>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td><img src="" alt="" /></td>
-                <td>Pankaj</td>
-                <td>Kumar</td>
-                <td>HeyImpankaj2616@gmail.com</td>
-                <td>Pankaj@1234455667</td>
-            </tr>
-            
-        </tbody>
+   <>
+   <div className="dashDiv">
+   <img className="userImage" src="https://w7.pngwing.com/pngs/167/774/png-transparent-laptop-user-personal-computer-laptop-electronics-child-hand-thumbnail.png" width="100px" alt="" />
+   <div>
+   <h1>{user.firstName} {user.lastName}</h1>
+   <h2>Email:{user.username} </h2>
+   <h3>Password:{user.password}</h3>
+   </div>
+   </div>
         
+   </>
+     
+       
+  );
+};
 
-    </table>
-  )
-}
-
-export default Dashboard
+export default Dashboard;
